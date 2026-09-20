@@ -27,22 +27,18 @@ jobs:
           curl -L -o tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
           unzip -q tools.zip
           mv cmdline-tools latest
-          yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
           "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "platforms;android-34" "build-tools;34.0.0" > /dev/null
 
-      - name: Build debug APK
-        run: |
-          chmod +x ./gradlew 2>/dev/null || true
-          gradle assembleDebug --no-daemon --stacktrace
-        env:
-          GRADLE_OPTS: -Dorg.gradle.daemon=false
-
       - name: Set up Gradle
-        if: ${{ false }}
-        run: echo skip
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build debug APK
+        run: gradle assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Samaira-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: Samai
