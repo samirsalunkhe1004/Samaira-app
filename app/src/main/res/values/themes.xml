@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.Samaira" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#6A4CFF</item>
+        <item name="colorPrimaryVariant">#4B32C2</item>
+        <item name="colorSecondary">#FF6AA0</item>
+    </style>
+</resources>
