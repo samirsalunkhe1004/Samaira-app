@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     env:
-      ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
+      ANDROID_HOME: ${{ github.workspace }}/android-sdk
     steps:
       - name: Get the code
         uses: actions/checkout@v4
@@ -22,13 +22,13 @@ jobs:
       - name: Install Android SDK
         run: |
           set -e
-          mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
-          cd "$ANDROID_SDK_ROOT/cmdline-tools"
+          mkdir -p "$ANDROID_HOME/cmdline-tools"
+          cd "$ANDROID_HOME/cmdline-tools"
           curl -L -o tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
           unzip -q tools.zip
           mv cmdline-tools latest
-          yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
-          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "platforms;android-34" "build-tools;34.0.0" > /dev/null
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "platforms;android-34" "build-tools;34.0.0" > /dev/null
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -36,9 +36,12 @@ jobs:
           gradle-version: '8.9'
 
       - name: Build debug APK
+        env:
+          ANDROID_SDK_ROOT: ""
         run: gradle assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Samai
+          name: Samaira-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
